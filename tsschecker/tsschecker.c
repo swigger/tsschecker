@@ -128,8 +128,8 @@ static struct bbdevice bbdevices[] = {
     {"iPhone8,2", 3840149528},
     {"iPhone8,4", 3840149528},
     {"iPhone9,2", 2315222105},
-//    {"iPhone9,3", 1421084145},
-//    {"iPhone9,4", 1421084145},
+    {"iPhone9,3", 1421084145},
+    {"iPhone9,4", 1421084145},
     
     {"iPad1,1", 0},
     {"iPad2,1", 0},
@@ -540,8 +540,9 @@ int tss_populate_devicevals(plist_t tssreq, uint64_t ecid, char *nonce, size_t n
 }
 
 int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbGoldCertId, size_t bbsnumSize){
+#define reterror(a...) {error(a); ret = -1; goto error;}
     int ret = 0;
-    plist_t parameters = plist_new_dict();
+    plist_t parameters = plist_copy(tssparameters);
     char bbnonce[NONCELEN_BASEBAND+1];
     char *bbsnum = (char*)malloc(bbsnumSize);
     int64_t BbChipID = 0;
@@ -552,32 +553,20 @@ int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbG
     srand((unsigned int)time(NULL));
     int n=0; for (int i=1; i<7; i++) BbChipID += (rand() % 10) * pow(10, ++n);
     
-    
+
     /* BasebandNonce not required */
-//    plist_dict_set_item(parameters, "BbNonce", plist_new_data(bbnonce, noncelen));
-    plist_dict_set_item(parameters, "BbChipID", plist_new_uint(BbChipID));
+//    plist_dict_set_item(parameters, "BbNonce", plist_new_data(bbnonce, NONCELEN_BASEBAND));
     plist_dict_set_item(parameters, "BbGoldCertId", plist_new_uint(BbGoldCertId));
     plist_dict_set_item(parameters, "BbSNUM", plist_new_data(bbsnum, bbsnumSize));
-    
-    /* BasebandFirmware */
-    plist_t BasebandFirmware = plist_access_path(tssparameters, 2, "Manifest", "BasebandFirmware");
-    if (!BasebandFirmware || plist_get_node_type(BasebandFirmware) != PLIST_DICT) {
-        error("ERROR: Unable to get BasebandFirmware node\n");
-        ret = -1;
-        goto error;
+
+    if (tss_request_add_baseband_tags(tssreq, parameters, NULL) < 0) {
+        reterror("[TSSR] Error: Failed to add baseband tags to TSS request\n");
     }
-    plist_t bbfwdict = plist_copy(BasebandFirmware);
-    BasebandFirmware = NULL;
-    if (plist_dict_get_item(bbfwdict, "Info")) {
-        plist_dict_remove_item(bbfwdict, "Info");
-    }
-    plist_dict_set_item(tssreq, "BasebandFirmware", bbfwdict);
-    
-    tss_request_add_baseband_tags(tssreq, parameters, NULL);
     
 error:
     free(bbsnum);
     return ret;
+#undef reterror
 }
 
 int parseHex(const char *nonce, size_t *parsedLen, char *ret, size_t *retSize){
@@ -767,15 +756,17 @@ getID0:
             }
             warning("[TSSR] there was an error getting BasebandGoldCertID, continuing without requesting Baseband ticket\n");
         }else if (BbGoldCertId) {
-            
+
             size_t bbsnumSize = 4;
-            if (strcasecmp(devVals->deviceModel, "iPhone9,") == 0)
+            // TODO add iPhone10,x
+            if (strcasecmp(devVals->deviceModel, "iPhone9,3") == 0 ||
+                    strcasecmp(devVals->deviceModel, "iPhone9,4") == 0) {
                 bbsnumSize = 12;
-            else if (strcasecmp(devVals->deviceModel, "iPhone3,") == 0)
-                bbsnumSize = 12;
-            
-            tss_populate_basebandvals(tssreq,tssparameter,BbGoldCertId,bbsnumSize);
-            tss_request_add_baseband_tags(tssreq, tssparameter, NULL);
+            }
+
+            if (tss_populate_basebandvals(tssreq, tssparameter, BbGoldCertId, bbsnumSize) < 0) {
+                reterror("[TSSR] Error: Failed to populate baseband values\n");
+            }
         }else{
             log("[TSSR] LOG: device %s doesn't need a Baseband ticket, continuing without requesting a Baseband ticket\n",devVals->deviceModel);
         }
