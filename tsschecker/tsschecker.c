@@ -759,7 +759,8 @@ getID0:
 
             size_t bbsnumSize = 4;
             // TODO add iPhone10,x
-            if (strcasecmp(devVals->deviceModel, "iPhone9,3") == 0 ||
+            if (strcasecmp(devVals->deviceModel, "iPhone3,1") == 0 ||
+                    strcasecmp(devVals->deviceModel, "iPhone9,3") == 0 ||
                     strcasecmp(devVals->deviceModel, "iPhone9,4") == 0) {
                 bbsnumSize = 12;
             }
