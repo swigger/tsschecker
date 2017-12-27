@@ -611,8 +611,10 @@ int tss_populate_random(plist_t tssreq, int is64bit, t_devicevals *devVals){
     size_t nonceLen = 20; //valid for all devices up to iPhone7
     if (!devVals->deviceModel)
         return error("[TSSR] internal error: devVals->deviceModel is missing\n"),-1;
-    
-    if (strncasecmp(devVals->deviceModel, "iPhone9,", strlen("iPhone9,")) == 0)
+
+    // TODO how can we determine this better?
+    if (strncasecmp(devVals->deviceModel, "iPhone9,", strlen("iPhone9,")) == 0 ||
+            strncasecmp(devVals->deviceModel, "iPhone10,", strlen("iPhone10,")) == 0)
         nonceLen = 32;
     
     int n=0;
