@@ -6,15 +6,17 @@
 //  Copyright © 2015 tihmstar. All rights reserved.
 //
 
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "download.h"
 #include "tsschecker.h"
 #include "all_tsschecker.h"
-
 
 #define FLAG_LIST_IOS       1 << 0
 #define FLAG_LIST_DEVICES   1 << 1
