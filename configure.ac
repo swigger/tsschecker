@@ -1,8 +1,9 @@
 AC_PREREQ([2.69])
-AC_INIT([tsschecker], [1.0.4], [tihmstar@gmail.com])
+AC_INIT([tsschecker], [1.0], [https://github.com/encounter/tsschecker/issues],, [https://github.com/encounter/tsschecker])
 # prepare for automake
 AM_INIT_AUTOMAKE([foreign])
 
+AC_CONFIG_SUBDIRS([external/libfragmentzip])
 AC_CONFIG_SRCDIR([tsschecker/tsschecker.h])
 AC_CONFIG_HEADERS([config.h])
 
@@ -36,7 +37,6 @@ AC_ARG_WITH(
 
 PKG_CHECK_MODULES(libplist, libplist >= 1.0)
 PKG_CHECK_MODULES(libcurl, libcurl >= 1.0)
-PKG_CHECK_MODULES(libfragmentzip, libfragmentzip >= 1.0)
 AS_IF([test "x$with_libcrypto" != xno],
     [PKG_CHECK_MODULES(libcrypto, libcrypto >= 1.0)]
 )

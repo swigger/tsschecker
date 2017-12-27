@@ -1,5 +1,5 @@
-AM_CFLAGS = $(libplist_CFLAGS) $(libfragmentzip_CFLAGS) $(libcurl_CFLAGS) $(libcrypto_CFLAGS) $(libirecovery_CFLAGS)  -I$(top_srcdir)/external/jssy/jssy/
-AM_LDFLAGS = $(libplist_LIBS) $(libfragmentzip_LIBS) $(libcurl_LIBS) $(libcrypto_LIBS) $(libirecovery_LIBS) -lm
+AM_CFLAGS = $(libplist_CFLAGS) $(libcurl_CFLAGS) $(libcrypto_CFLAGS) $(libirecovery_CFLAGS) -I$(top_srcdir)/external/jssy/jssy/
+AM_LDFLAGS = $(libplist_LIBS) $(libcurl_LIBS) $(libcrypto_LIBS) $(libirecovery_LIBS) -lm
 
 lib_LIBRARIES = libjssy.a
 libjssy_a_CFLAGS = $(AM_CFLAGS)
@@ -14,6 +14,6 @@ libtsschecker_la_LIBADD = $(AM_LDFLAGS) libjssy.a
 else
 bin_PROGRAMS	= tsschecker
 tsschecker_CFLAGS = $(AM_CFLAGS)
-tsschecker_LDADD = $(AM_LDFLAGS) libjssy.a
+tsschecker_LDADD = $(AM_LDFLAGS) libjssy.a $(top_srcdir)/external/libfragmentzip/libfragmentzip/libfragmentzip.la
 tsschecker_SOURCES	= tsschecker.c tss.c download.c main.c
 endif
