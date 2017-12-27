@@ -8,6 +8,10 @@
 
 #define _POSIX_C_SOURCE 200809L
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -86,6 +90,7 @@ void cmd_help(){
     printf("      --print-tss-response\n");
     printf("      --raw\t\t\tsend raw file to Apple's tss server (useful for debugging)\n");
     printf("\n");
+    printf("Homepage: <" PACKAGE_URL ">\n");
 }
 
 int64_t parseECID(const char *ecid){
