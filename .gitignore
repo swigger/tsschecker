@@ -25,6 +25,7 @@ tsschecker/*.o
 tsschecker/*.la
 tsschecker/*.lo
 tsschecker/tsschecker
+tsschecker/tsschecker.exe
 tsschecker/.libs
 tsschecker/.deps
 stamp-h1
