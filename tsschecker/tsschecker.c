@@ -169,6 +169,9 @@ static struct bbdevice bbdevices[] = {
     {"iPad6,7", 0, 0},
     {"iPad6,8", 3840149528, 4},
     {"iPad6,11", 0, 0},
+    {"iPad7,1", 0, 0},
+    {"iPad7,2", 2315222105, 4},
+    {"iPad7,3", 0, 0},
     {"iPad7,4", 2315222105, 4},
     
     {"AppleTV1,1", 0, 0},
@@ -764,7 +767,7 @@ getID0:
         size_t bbsnumSize = devVals->bbsnumSize ? devVals->bbsnumSize : bbinfo->bbsnumSize;
         if (BbGoldCertId != bbinfo->bbgcid || bbsnumSize != bbinfo->bbsnumSize) {
             info("\n[TSSR] Found undocumented baseband. Please file an issue at " PACKAGE_BUGREPORT
-                 " with the following information:\n\t%s {\"%s\", %llu, %lu}\n\n",
+                 " with the following information:\n\t%s {\"%s\", " PRIi64 ", " PRIu64 "}\n\n",
                  devVals->deviceBoard, devVals->deviceModel, BbGoldCertId, bbsnumSize);
         }
 
