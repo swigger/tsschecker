@@ -548,16 +548,21 @@ int tss_populate_devicevals(plist_t tssreq, uint64_t ecid, char *nonce, size_t n
     return 0;
 }
 
-int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbGoldCertId, size_t bbsnumSize){
+int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbGoldCertId, uint8_t *BbSNUM, size_t bbsnumSize){
 #define reterror(a...) {error(a); ret = -1; goto error;}
     int ret = 0;
     plist_t parameters = plist_copy(tssparameters);
     char bbnonce[NONCELEN_BASEBAND+1];
-    char *bbsnum = (char*)malloc(bbsnumSize);
+
+    int did_malloc_bbsnum = 0;
+    if (!BbSNUM) {
+        BbSNUM = (uint8_t *)malloc(bbsnumSize);
+        getRandNum((char *)BbSNUM, bbsnumSize, 256);
+        did_malloc_bbsnum = 1;
+    }
     int64_t BbChipID = 0;
     
     
-    getRandNum(bbsnum, bbsnumSize, 256);
     getRandNum(bbnonce, NONCELEN_BASEBAND, 256);
     srand((unsigned int)time(NULL));
     int n=0; for (int i=1; i<7; i++) BbChipID += (rand() % 10) * pow(10, ++n);
@@ -566,14 +571,16 @@ int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbG
     /* BasebandNonce not required */
 //    plist_dict_set_item(parameters, "BbNonce", plist_new_data(bbnonce, NONCELEN_BASEBAND));
     plist_dict_set_item(parameters, "BbGoldCertId", plist_new_uint(BbGoldCertId));
-    plist_dict_set_item(parameters, "BbSNUM", plist_new_data(bbsnum, bbsnumSize));
+    plist_dict_set_item(parameters, "BbSNUM", plist_new_data((char *)BbSNUM, bbsnumSize));
 
     if (tss_request_add_baseband_tags(tssreq, parameters, NULL) < 0) {
         reterror("[TSSR] Error: Failed to add baseband tags to TSS request\n");
     }
     
 error:
-    free(bbsnum);
+    if (did_malloc_bbsnum) {
+        free(BbSNUM);
+    }
     return ret;
 #undef reterror
 }
@@ -777,8 +784,8 @@ getID0:
             }
             warning("[TSSR] there was an error getting BasebandGoldCertID, continuing without requesting Baseband ticket\n");
         }else if (BbGoldCertId) {
-
-            if (tss_populate_basebandvals(tssreq, tssparameter, BbGoldCertId, bbsnumSize) < 0) {
+    
+            if (tss_populate_basebandvals(tssreq, tssparameter, BbGoldCertId, devVals->bbsnum, bbsnumSize) < 0) {
                 reterror("[TSSR] Error: Failed to populate baseband values\n");
             }
         }else{
