@@ -56,6 +56,7 @@ static struct option longopts[] = {
     { "sepnonce",           required_argument, NULL, 9 },
     { "raw",                required_argument, NULL, 10 },
     { "generator",          required_argument, NULL, 'g' },
+    { "bbsnum",             required_argument, NULL, 11 },
     { NULL, 0, NULL, 0 }
 };
 
@@ -79,6 +80,7 @@ void cmd_help(){
     printf("                 \t\tECID must be either dec or hex eg. 5482657301265 or ab46efcbf71\n");
     printf("      --apnonce NONCE\t\tmanually specify APNONCE instead of using random one (not required for saving blobs)\n");
     printf("      --sepnonce NONCE\t\tmanually specify SEPNONCE instead of using random one (not required for saving blobs)\n");
+    printf("      --bbsnum SNUM\t\tmanually specify BbSNUM, in hex, for saving valid BBTicket\n");
     printf("      --save-path PATH\t\tspecify path for saving blobs\n");
     printf("      --generator GEN\t\tmanually specify generator in format 0x%%16llx\n");
     printf("  -h, --help\t\t\tprints usage information\n");
@@ -163,6 +165,7 @@ int main(int argc, const char * argv[]) {
     
     char *apnonce = 0;
     char *sepnonce = 0;
+    char *bbsnum = 0;
     t_devicevals devVals = {0};
     t_iosVersion versVals = {0};
     char *firmwareJson = NULL;
@@ -272,7 +275,9 @@ int main(int argc, const char * argv[]) {
                 rawFilePath = optarg;
                 idevicerestore_debug = 1;
                 break;
-                
+            case 11: // --bbsnum
+                bbsnum = optarg;
+                break;
             default:
                 cmd_help();
                 return -1;
@@ -354,6 +359,27 @@ int main(int argc, const char * argv[]) {
         }
     }
     
+    if (bbsnum) {
+        t_bbdevice bbinfo = getBBDeviceInfo(devVals.deviceModel);
+        if (bbinfo->bbsnumSize == 0) {
+            reterror(-8, "[TSSC] this device has no baseband, so it does not make sense to provide BbSNUM.\n");
+        }
+
+        if ((devVals.bbsnum = (uint8_t *)parseNonce(bbsnum, &devVals.bbsnumSize))) {
+            info("[TSSC] manually specified BbSNUM to use, parsed \"%s\" to hex:", bbsnum);
+            unsigned char *tmp = devVals.bbsnum;
+            for (int i=0; i< devVals.bbsnumSize; i++) info("%02x", *tmp++);
+            info("\n");
+
+            if (bbinfo->bbsnumSize != devVals.bbsnumSize) {
+                reterror(-8, "[TSSC] BbSNUM length for this device should be %d, but you gave one of length %d\n", (int)bbinfo->bbsnumSize,
+                    (int)devVals.bbsnumSize);
+            }
+        } else {
+            reterror(-7, "[TSSC] manually specified bbsnum=%s, but parsing failed\n", bbsnum);
+        }
+    }
+
     if (!buildmanifest) { //no need to get firmares/ota json if specifying buildmanifest manually
     reparse:
         firmwareJson = (versVals.isOta) ? getOtaJson() : getFirmwareJson();
@@ -421,6 +447,7 @@ error:
     if (devVals.deviceModel) free(devVals.deviceModel);
     if (devVals.apnonce) free(devVals.apnonce);
     if (devVals.sepnonce) free(devVals.sepnonce);
+    if (devVals.bbsnum) free(devVals.bbsnum);
     if (firmwareJson) free(firmwareJson);
     if (firmwareTokens) free(firmwareTokens);
     return err ? err : !isSigned;
