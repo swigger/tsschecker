@@ -10,17 +10,6 @@ autoheader
 automake --add-missing
 autoconf
 
-export NOCONFIGURE=1
-
-SUBDIRS="external/libfragmentzip"
-for SUB in $SUBDIRS; do
-    pushd $SUB
-    ./autogen.sh
-    popd
-done
-
-unset NOCONFIGURE
-
 if [ -z "$NOCONFIGURE" ]; then
     ./configure "$@"
 fi

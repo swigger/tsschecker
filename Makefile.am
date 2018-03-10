@@ -1,1 +1,1 @@
-SUBDIRS = external/libfragmentzip tsschecker
+SUBDIRS = tsschecker
