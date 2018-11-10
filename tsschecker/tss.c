@@ -829,12 +829,11 @@ int tss_request_add_se_tags(plist_t request, plist_t parameters, plist_t overrid
 	node = NULL;
 
 	/* 'IsDev' determines whether we have Production or Development */
-	const char *removing_cmac_key = "DevelopmentCMAC";
+	uint8_t is_dev = 0;
 	node = plist_dict_get_item(parameters, "SE,IsDev");
 	if (node && plist_get_node_type(node) == PLIST_BOOLEAN) {
-		uint8_t is_dev = 0;
 		plist_get_bool_val(node, &is_dev);
-		removing_cmac_key = (is_dev) ? "ProductionCMAC" : "DevelopmentCMAC";
+		key_to_remove = (is_dev) ? production_key : development_key;
 	}
 
 	/* add SE,* components from build manifest to request */
@@ -864,10 +863,19 @@ int tss_request_add_se_tags(plist_t request, plist_t parameters, plist_t overrid
 		/* remove Info node */
 		plist_dict_remove_item(tss_entry, "Info");
 
-		/* remove 'DevelopmentCMAC' (or 'ProductionCMAC') node */
-		if (plist_dict_get_item(tss_entry, removing_cmac_key)) {
-			plist_dict_remove_item(tss_entry, removing_cmac_key);
-		}
+		/* remove Development or Production key/hash node */
+        if (is_dev) {
+            if (plist_dict_get_item(tss_entry, "ProductionCMAC"))
+                plist_dict_remove_item(tss_entry, "ProductionCMAC");
+            if (plist_dict_get_item(tss_entry, "ProductionUpdatePayloadHash"))
+                plist_dict_remove_item(tss_entry, "ProductionUpdatePayloadHash");
+        }
+        else {
+            if (plist_dict_get_item(tss_entry, "DevelopmentCMAC"))
+                plist_dict_remove_item(tss_entry, "DevelopmentCMAC");
+            if (plist_dict_get_item(tss_entry, "DevelopmentUpdatePayloadHash"))
+                plist_dict_remove_item(tss_entry, "DevelopmentUpdatePayloadHash");
+        }
 
 		/* add entry to request */
 		plist_dict_set_item(request, key, tss_entry);

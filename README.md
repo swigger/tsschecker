@@ -1,10 +1,6 @@
 # tsschecker  
 _tsschecker is a powerful tool to check tss signing status of various devices and iOS versions._
 
-Latest compiled version can be found here:  
-(macOS & Windows)  
-https://github.com/encounter/tsschecker/releases
-
 ## Features  
 * Allows you to get lists of all devices and all iOS/OTA versions for a specific device.
 * Can check signing status for default iOS versions and beta ipsws (by specifying a `BuildManifest.plist`)
