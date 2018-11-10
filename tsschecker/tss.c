@@ -1071,13 +1071,17 @@ char* tss_request_send_raw(char* request, const char* server_url_string, int* re
     char curl_error_message[CURL_ERROR_SIZE];
     if (response_lenth) *response_lenth = 0;
     
-    const char* urls[6] = {
+    const char* urls[10] = {
         "https://gs.apple.com/TSS/controller?action=2",
         "https://17.111.103.65/TSS/controller?action=2",
         "https://17.111.103.15/TSS/controller?action=2",
+        "https://17.171.36.30/TSS/controller?action=2",
+        "https://17.151.36.30/TSS/controller?action=2",
         "http://gs.apple.com/TSS/controller?action=2",
         "http://17.111.103.65/TSS/controller?action=2",
-        "http://17.111.103.15/TSS/controller?action=2"
+        "http://17.111.103.15/TSS/controller?action=2",
+        "http://17.171.36.30/TSS/controller?action=2",
+        "http://17.151.36.30/TSS/controller?action=2"
     };
     
     tss_response* response = NULL;
