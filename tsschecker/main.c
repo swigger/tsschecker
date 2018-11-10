@@ -64,15 +64,15 @@ void cmd_help(){
     printf("Usage: tsschecker [OPTIONS]\n");
     printf("Checks (real) signing status of device/firmware\n\n");
     
-    printf("  -d, --device MODEL\t\tspecific device by its MODEL (eg. iPhone4,1)\n");
-    printf("  -i, --ios VERSION\t\tspecific iOS version (eg. 6.1.3)\n");
-    printf("      --buildid BUILDID\t\tspecific buildid instead of iOS version (eg. 13C75)\n");
-    printf("  -B, --boardconfig BOARD\tspecific boardconfig instead of iPhone model (eg. n61ap)\n");
+    printf("  -d, --device MODEL\t\tspecific device by its MODEL (eg. iPhone11,8)\n");
+    printf("  -i, --ios VERSION\t\tspecific iOS version (eg. 12.1)\n");
+    printf("      --buildid BUILDID\t\tspecific buildid instead of iOS version (eg. 16B94)\n");
+    printf("  -B, --boardconfig BOARD\tspecific boardconfig instead of iPhone model (eg. n841ap)\n");
     printf("  -h, --help\t\t\tprints usage information\n");
     printf("  -o, --ota\t\t\tcheck OTA signing status, instead of normal restore\n");
     printf("  -b, --no-baseband\t\tdon't check baseband signing status. Request a ticket without baseband\n");
-    printf("  -m, --build-manifest\t\tmanually specify buildmanifest. (can be used with -d)\n");
-    printf("  -s, --save\t\t\tsave fetched shsh blobs (mostly makes sense with -e)\n");
+    printf("  -m, --build-manifest\t\tmanually specify buildmanifest (can be used with -d)\n");
+    printf("  -s, --save\t\t\tsave fetched blobs (mostly makes sense with -e)\n");
     printf("  -u, --update-install\t\t\trequest update ticket instead of erase\n");
     printf("  -l, --latest\t\t\tuse latest public iOS version instead of manually specifying one\n");
     printf("                 \t\tespecially useful with -s and -e for saving blobs\n");
@@ -86,7 +86,7 @@ void cmd_help(){
     printf("  -h, --help\t\t\tprints usage information\n");
     printf("      --beta\t\t\trequest ticket for beta instead of normal relase (use with -o)\n");
     printf("      --list-devices\t\tlist all known devices\n");
-    printf("      --list-ios\t\tlist all known ios versions\n");
+    printf("      --list-ios\t\tlist all known iOS versions\n");
     printf("      --nocache \t\tignore caches and redownload required files\n");
     printf("      --print-tss-request\n");
     printf("      --print-tss-response\n");
@@ -310,7 +310,6 @@ int main(int argc, const char * argv[]) {
         for (int i=0; i<strlen(devVals.deviceBoard); i++)
             devVals.deviceBoard[i] = tolower(devVals.deviceBoard[i]);
     
-    
     if (!devVals.deviceModel){
         if (devVals.deviceBoard){
             char *tmp = NULL;
@@ -398,8 +397,6 @@ int main(int argc, const char * argv[]) {
         }
     }
 
-    
-    
     if (flags & FLAG_LATEST_IOS && !versVals.version){
         int versionCnt = 0;
         int i = 0;
@@ -442,8 +439,6 @@ int main(int argc, const char * argv[]) {
             reterror(-69, "[TSSC] checking tss status failed!\n");
         }
     }
-    
-    
     
 error:
     if (devVals.deviceBoard) free(devVals.deviceBoard);

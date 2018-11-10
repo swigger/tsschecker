@@ -111,75 +111,85 @@ const char *shshSavePath = "."DIRECTORY_DELIMITER_STR;
 
 
 static struct bbdevice bbdevices[] = {
-    {"iPod1,1", 0, 0},
-    {"iPod2,1", 0, 0},
-    {"iPod3,1", 0, 0},
-    {"iPod4,1", 0, 0},
-    {"iPod5,1", 0, 0},
-    {"iPod7,1", 0, 0},
+    // iPod touches
+    {"iPod1,1", 0, 0}, // 1st gen
+    {"iPod2,1", 0, 0}, // 2nd gen
+    {"iPod3,1", 0, 0}, // 3rd gen
+    {"iPod4,1", 0, 0}, // 4th gen
+    {"iPod5,1", 0, 0}, // 5th gen
+    {"iPod7,1", 0, 0}, // 6th gen
     
-    {"iPhone2,1", 0, 0},
-    {"iPhone3,1", 257, 12},
-    {"iPhone3,3", 2, 4},
-    {"iPhone4,1", 2, 4},
-    {"iPhone5,1", 3255536192, 4},
-    {"iPhone5,2", 3255536192, 4},
-    {"iPhone5,3", 3554301762, 4},
-    {"iPhone5,4", 3554301762, 4},
-    {"iPhone6,1", 3554301762, 4},
-    {"iPhone6,2", 3554301762, 4},
-    {"iPhone7,1", 3840149528, 4},
-    {"iPhone7,2", 3840149528, 4},
-    {"iPhone8,1", 3840149528, 4},
-    {"iPhone8,2", 3840149528, 4},
-    {"iPhone8,4", 3840149528, 4},
-    {"iPhone9,1", 2315222105, 4},
-    {"iPhone9,2", 2315222105, 4},
-    {"iPhone9,3", 1421084145, 12},
-    {"iPhone9,4", 1421084145, 12},
-    {"iPhone10,1", 2315222105, 4},
-    {"iPhone10,2", 2315222105, 4},
-    {"iPhone10,3", 2315222105, 4},
-    {"iPhone10,4", 524245983, 12},
-    {"iPhone10,5", 524245983, 12},
-    {"iPhone10,6", 524245983, 12},
+    // iPhones
+    {"iPhone2,1", 0, 0}, // iPhone 3Gs
+    {"iPhone3,1", 257, 12}, // iPhone 4 GSN
+    {"iPhone3,3", 2, 4}, // iPhone 4 CDMA
+    {"iPhone4,1", 2, 4}, // iPhone 4s
+    {"iPhone5,1", 3255536192, 4}, // iPhone 5 (GSM)
+    {"iPhone5,2", 3255536192, 4}, // iPhone 5 (Global)
+    {"iPhone5,3", 3554301762, 4}, // iPhone 5c
+    {"iPhone5,4", 3554301762, 4}, // iPhone 5c (Global)
+    {"iPhone6,1", 3554301762, 4}, // iPhone 5s
+    {"iPhone6,2", 3554301762, 4}, // iPhone 5s (Global)
+    {"iPhone7,1", 3840149528, 4}, // iPhone 6 Plus
+    {"iPhone7,2", 3840149528, 4}, // iPhone 6
+    {"iPhone8,1", 3840149528, 4}, // iPhone 6s
+    {"iPhone8,2", 3840149528, 4}, // iPhone 6s Plus
+    {"iPhone8,4", 3840149528, 4}, // iPhone SE
+    {"iPhone9,1", 2315222105, 4}, // iPhone 7 (Global)
+    {"iPhone9,2", 2315222105, 4}, // iPhone 7 Plus (Global)
+    {"iPhone9,3", 1421084145, 12}, // iPhone 7 GSM
+    {"iPhone9,4", 1421084145, 12}, // iPhone 7 Plus (GSM)
+    {"iPhone10,1", 2315222105, 4}, // iPhone 8 (Global)
+    {"iPhone10,2", 2315222105, 4}, // iPhone 8 Plus (Global)
+    {"iPhone10,3", 2315222105, 4}, // iPhone X (Global)
+    {"iPhone10,4", 524245983, 12}, // iPhone 8 (GSM)
+    {"iPhone10,5", 524245983, 12}, // iPhone 8 Plus (GSM)
+    {"iPhone10,6", 524245983, 12}, // iPhone X GSM
     
-    {"iPad1,1", 0, 0},
-    {"iPad2,1", 0, 0},
-    {"iPad2,2", 257, 12},
-    {"iPad2,4", 0, 0},
-    {"iPad2,5", 0, 0},
-    {"iPad3,1", 0, 0},
-    {"iPad3,2", 4, 4},
-    {"iPad3,3", 4, 4},
-    {"iPad3,4", 0, 0},
-    {"iPad3,6", 3255536192, 4},
-    {"iPad4,1", 0, 0},
-    {"iPad4,2", 3554301762, 4},
-    {"iPad4,4", 0, 0},
-    {"iPad4,5", 3554301762, 4},
-    {"iPad4,7", 0, 0},
-    {"iPad4,8", 3554301762, 4},
-    {"iPad5,1", 0, 0},
-    {"iPad5,2", 3840149528, 4},
-    {"iPad5,3", 0, 0},
-    {"iPad5,4", 3840149528, 4},
-    {"iPad6,3", 0, 0},
-    {"iPad6,4", 3840149528, 4},
-    {"iPad6,7", 0, 0},
-    {"iPad6,8", 3840149528, 4},
-    {"iPad6,11", 0, 0},
-    {"iPad6,12", 3840149528, 4},
-    {"iPad7,1", 0, 0},
-    {"iPad7,2", 2315222105, 4},
-    {"iPad7,3", 0, 0},
-    {"iPad7,4", 2315222105, 4},
+    // iPads
+    {"iPad1,1", 0, 0}, // iPad (1st gen)
+    {"iPad2,1", 0, 0}, // iPad 2 Wi-Fi
+    {"iPad2,2", 257, 12}, // iPad 2 GSM
+    {"iPad2,4", 0, 0}, // iPad 2 Wi-Fi (2012)
+    {"iPad2,5", 0, 0}, // iPad mini (1st gen, Wi-Fi)
+    {"iPad3,1", 0, 0}, // the new iPad (3rd gen, Wi-Fi)
+    {"iPad3,2", 4, 4}, // the new iPad (3rd gen, CDMA)
+    {"iPad3,3", 4, 4}, // the new iPad (3rd gen, GSM)
+    {"iPad3,4", 0, 0}, // iPad with Retina Display (4th gen, Wi-Fi)
+    {"iPad3,6", 3255536192, 4}, // iPad with Retina Display (4th gen, Global)
+    {"iPad4,1", 0, 0}, // iPad Air (Wi-Fi)
+    {"iPad4,2", 3554301762, 4}, // iPad Air (Cellular)
+    {"iPad4,4", 0, 0}, // iPad mini 2 (Wi-Fi)
+    {"iPad4,5", 3554301762, 4}, // iPad mini 2 (Cellular)
+    {"iPad4,7", 0, 0}, // iPad mini 3 (Wi-Fi)
+    {"iPad4,8", 3554301762, 4}, // iPad mini 3 (Cellular)
+    {"iPad5,1", 0, 0}, // iPad mini 4 (Wi-Fi)
+    {"iPad5,2", 3840149528, 4}, // iPad mini 4 (Cellular)
+    {"iPad5,3", 0, 0}, // iPad Air 2 (Wi-Fi)
+    {"iPad5,4", 3840149528, 4}, // iPad Air 2 (Cellular)
+    {"iPad6,3", 0, 0}, // iPad Pro (9,7", Wi-Fi)
+    {"iPad6,4", 3840149528, 4}, // iPad Pro (9,7", Cellular)
+    {"iPad6,7", 0, 0}, // iPad Pro (12.9", 1st gen, Wi-Fi)
+    {"iPad6,8", 3840149528, 4}, // iPad Pro (12.9", 1st gen, Cellular)
+    {"iPad6,11", 0, 0}, // iPad (5th gen, 2017, Wi-Fi)
+    {"iPad6,12", 3840149528, 4}, // iPad (5th gen, 2017, Cellular)
+    {"iPad7,1", 0, 0}, // iPad Pro (12.9", 2nd gen, Wi-Fi)
+    {"iPad7,2", 2315222105, 4}, // iPad Pro (12.9", 1st gen, Cellular)
+    {"iPad7,3", 0, 0}, // iPad Pro (10,5", Wi-Fi)
+    {"iPad7,4", 2315222105, 4}, // iPad Pro (10,5", Cellular)
+    ("iPad7,5", 0, 0), // iPad (6th generation, 2018, Wi-Fi)
+    {"iPad8,1", 0, 0}, // iPad Pro (11", Wi-Fi)
+    {"iPad8,2", 0, 0}, // iPad Pro (11", 1 TB model, Wi-Fi)
+    {"iPad8,5", 0, 0}, // iPad Pro (12,9", 3th gen, Wi-Fi)
+    ("iPad8,6", 0, 0), // iPad Pro (12,9", 3th gen, 1 TB model, Wi-Fi)
     
-    {"AppleTV1,1", 0, 0},
-    {"AppleTV2,1", 0, 0},
-    {"AppleTV3,1", 0, 0},
-    {"AppleTV3,2", 0, 0},
-    {"AppleTV5,3", 0, 0},
+    // Apple TVs
+    {"AppleTV1,1", 0, 0}, // 1st gen
+    {"AppleTV2,1", 0, 0}, // 2nd gen
+    {"AppleTV3,1", 0, 0}, // 3rd gen
+    {"AppleTV3,2", 0, 0}, // 3rd gen (2013)
+    {"AppleTV5,3", 0, 0}, // 4th gen
+    {"AppleTV6,2", 0, 0}, // Apple TV 4K
     {NULL, 0, 0}
 };
 
