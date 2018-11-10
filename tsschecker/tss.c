@@ -833,7 +833,6 @@ int tss_request_add_se_tags(plist_t request, plist_t parameters, plist_t overrid
 	node = plist_dict_get_item(parameters, "SE,IsDev");
 	if (node && plist_get_node_type(node) == PLIST_BOOLEAN) {
 		plist_get_bool_val(node, &is_dev);
-		key_to_remove = (is_dev) ? production_key : development_key;
 	}
 
 	/* add SE,* components from build manifest to request */
