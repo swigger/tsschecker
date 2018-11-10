@@ -1,5 +1,5 @@
 //
-//  ipswme.h
+//  tsschecker.h
 //  tsschecker
 //
 //  Created by tihmstar on 07.01.16.
