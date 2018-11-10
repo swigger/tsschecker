@@ -78,13 +78,13 @@ void cmd_help(){
     printf("                 \t\tespecially useful with -s and -e for saving blobs\n");
     printf("  -e, --ecid ECID\t\tmanually specify ECID to be used for fetching blobs, instead of using random ones\n");
     printf("                 \t\tECID must be either dec or hex eg. 5482657301265 or ab46efcbf71\n");
-    printf("      --apnonce NONCE\t\tmanually specify APNONCE instead of using random one (not required for saving blobs)\n");
-    printf("      --sepnonce NONCE\t\tmanually specify SEPNONCE instead of using random one (not required for saving blobs)\n");
+    printf("      --apnonce NONCE\t\tmanually specify APNonce instead of using random one (not required for saving blobs)\n");
+    printf("      --sepnonce NONCE\t\tmanually specify SEPNonce instead of using random one (not required for saving blobs)\n");
     printf("      --bbsnum SNUM\t\tmanually specify BbSNUM, in hex, for saving valid BBTicket\n");
     printf("      --save-path PATH\t\tspecify path for saving blobs\n");
     printf("      --generator GEN\t\tmanually specify generator in format 0x%%16llx\n");
     printf("  -h, --help\t\t\tprints usage information\n");
-    printf("      --beta\t\t\trequest ticket for beta instead of normal relase (use with -o)\n");
+    printf("      --beta\t\t\trequest ticket for beta instead of normal release (use with -o)\n");
     printf("      --list-devices\t\tlist all known devices\n");
     printf("      --list-ios\t\tlist all known iOS versions\n");
     printf("      --nocache \t\tignore caches and redownload required files\n");

@@ -26,26 +26,24 @@ By using all of its customization possibilities, you might discover a combinatio
   Make sure these projects compile on your system
   * [jssy](https://github.com/tihmstar/jssy)
 
-
-## tsschecker help  
-_(might become outdated):_
+## tsschecker help
 
 Usage: `tsschecker [OPTIONS]`
 
 | option (short) | option (long)             | description                                                                       |
 |----------------|---------------------------|-----------------------------------------------------------------------------------|
-|  `-d`          | `--device MODEL`          | specify device by its MODEL (eg. `iPhone4,1`)                                     |
-|  `-i`          | `--ios VERSION`           | specify iOS version (eg. `6.1.3`)                                                 |
-|				         | `--buildid BUILDID`		   | specific buildid instead of iOS version (eg. `13C75`)							               |
-|				         | `--boardconfig BOARD`	   | specific boardconfig instead of iPhone model (eg. `n61ap`)						             |
+|  `-d`          | `--device MODEL`          | specify device by its MODEL (eg. `iPhone11,8`)                                     |
+|  `-i`          | `--ios VERSION`           | specify iOS version (eg. `12.1`)                                                 |
+|				         | `--buildid BUILDID`		   | specific buildid instead of iOS version (eg. `16B94`)							               |
+|				         | `--boardconfig BOARD`	   | specific boardconfig instead of iPhone model (eg. `n841ap`)						             |
 |  `-h`          | `--help`                  | prints usage information                                                          |
 |  `-o`          | `--ota`	                 | check OTA signing status, instead of normal restore                               |
 |  `-b`          | `--no-baseband`           | don't check baseband signing status. Request a ticket without baseband            |
 |  `-m`          |`--build-manifest MANIFEST`| manually specify buildmanifest. (can be used with `-d`)                           |  
-|  `-s`          | `--save`		     		       | save fetched shsh blobs (mostly makes sense with -e)                              |
+|  `-s`          | `--save`		     		       | save fetched blobs (mostly makes sense with -e)                              |
 |  `-l`			     | `--latest`  				       | use latest public iOS version instead of manually specifying one<br>especially useful with `-s` and `-e` for saving blobs                                                                                              |
-|      			     | `--apnonce NONCE`   		   | manually specify APNONCE instead of using random one (not required for saving blobs)|
-|      			     | `--sepnonce NONCE`        | manually specify SEPNONCE instead of using random one (not required for saving blobs) 		                                                                                                                                  |
+|      			     | `--apnonce NONCE`   		   | manually specify APNonce instead of using random one (not required for saving blobs)|
+|      			     | `--sepnonce NONCE`        | manually specify SEPNonce instead of using random one (not required for saving blobs) 		                                                                                                                                  |
 |      			     | `--save-path PATH`        | specify path for saving blobs 		 														 |
 |  `-e`          | `--ecid ECID`	         | manually specify an ECID to be used for fetching blobs, instead of using random ones. <br>ECID must be either dec or hex eg. `5482657301265` or `ab46efcbf71`                                                          |
 |                |  `--beta`	             | request ticket for beta instead of normal release (use with `-o`)                |
