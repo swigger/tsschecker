@@ -485,8 +485,10 @@ char *getBuildManifest(char *url, const char *device, const char *version, const
     return buildmanifest;
 }
 
+    extern int64_t bbid;
 int64_t getBBGCIDForDevice(const char *deviceModel){
-    
+	if (bbid) return bbid;
+
     t_bbdevice bbdevs = bbdevices_get_all();
     
     while (bbdevs->deviceModel && strcasecmp(bbdevs->deviceModel, deviceModel) != 0)

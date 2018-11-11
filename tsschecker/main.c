@@ -14,7 +14,7 @@
 #include "download.h"
 #include "tsschecker.h"
 #include "all_tsschecker.h"
-
+int64_t bbid;
 
 #define FLAG_LIST_IOS       1 << 0
 #define FLAG_LIST_DEVICES   1 << 1
@@ -50,6 +50,7 @@ static struct option longopts[] = {
     { "sepnonce",           required_argument, NULL, 9 },
     { "raw",                required_argument, NULL, 10 },
     { "generator",          required_argument, NULL, 'g' },
+	{ "bbid",               required_argument, NULL, 1000},
     { NULL, 0, NULL, 0 }
 };
 
@@ -265,6 +266,9 @@ int main(int argc, const char * argv[]) {
                 rawFilePath = optarg;
                 idevicerestore_debug = 1;
                 break;
+			case 1000:
+				bbid = strtoll(optarg, 0, 0);
+				break;
                 
             default:
                 cmd_help();
