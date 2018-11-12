@@ -1118,6 +1118,7 @@ char* tss_request_send_raw(char* request, const char* server_url_string, int* re
         /* disable SSL verification to allow download from untrusted https locations */
         curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_easy_setopt(handle, CURLOPT_TIMEOUT, 15);
         
         curl_easy_setopt(handle, CURLOPT_ERRORBUFFER, curl_error_message);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, (curl_write_callback)&tss_write_callback);

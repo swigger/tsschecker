@@ -17,8 +17,8 @@ extern int idevicerestore_debug;
 #define debug(a ...) if (idevicerestore_debug) printf(a)
 #define error(a ...) printf("[Error] "),printf(a)
 
-#define VERSION_COMMIT_COUNT "299"
-#define VERSION_COMMIT_SHA "2defe609672ce5370d08f5b7ca61d66219e0b2fa"
+#define VERSION_COMMIT_COUNT "300"
+#define VERSION_COMMIT_SHA "9b05f9df609ae73f8b9662a1a07051a13527cdfe"
 
 //statis assert
 #define CASSERT(predicate, file) _impl_CASSERT_LINE(predicate,__LINE__,file)
