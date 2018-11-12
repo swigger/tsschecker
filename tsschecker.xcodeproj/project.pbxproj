@@ -291,6 +291,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_CFLAGS = "-std=c11";
+				OTHER_LDFLAGS = "-L/opt/local/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -306,6 +307,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_CFLAGS = "-std=c11";
+				OTHER_LDFLAGS = "-L/opt/local/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
