@@ -846,6 +846,7 @@ char* tss_request_send_raw(char* request, const char* server_url_string, int* re
         
         /* disable SSL verification to allow download from untrusted https locations */
         curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 0);
         
         curl_easy_setopt(handle, CURLOPT_ERRORBUFFER, curl_error_message);
         curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, (curl_write_callback)&tss_write_callback);
@@ -881,10 +882,12 @@ char* tss_request_send_raw(char* request, const char* server_url_string, int* re
             tsserror("TSS server returned: %s\n", response->content);
         }
         
+		status_code = -1;
         char* status = strstr(response->content, "STATUS=");
         if (status) {
             sscanf(status+7, "%d&%*s", &status_code);
         }
+		char * msg = strstr(response->content, "MESSAGE=");
         if (status_code == -1) {
             error("%s\n", curl_error_message);
             // no status code in response. retry
@@ -904,11 +907,11 @@ char* tss_request_send_raw(char* request, const char* server_url_string, int* re
         } else if (status_code == 100) {
             // server error, most likely the request was malformed
             break;
-        } else if (status_code == 126) {
+        } else if (status_code == 126 || status_code == 128) {
             // An internal error occured, most likely the request was malformed
             break;
         } else {
-            error("ERROR: tss_send_request: Unhandled status code %d\n", status_code);
+			error("ERROR: tss_send_request: Unhandled status=%d %s\n", status_code, msg?msg:"");
         }
     }
     

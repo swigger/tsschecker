@@ -804,7 +804,8 @@ int isManifestBufSignedForDevice(char *buildManifestBuffer, t_devicevals *devVal
     plist_t apticket = NULL;
     plist_t apticket2 = NULL;
     plist_t apticket3 = NULL;
-    
+
+	info("======== checking manifest signed =============\n");
     if (tssrequest(&tssreq, buildManifestBuffer, devVals, basebandMode))
         reterror("[TSSR] faild to build tssrequest\n");
 
@@ -815,7 +816,7 @@ int isManifestBufSignedForDevice(char *buildManifestBuffer, t_devicevals *devVal
     if (isSigned && save_shshblobs){
         if (!devVals->installType){
             plist_t tssreq2 = NULL;
-            info("also requesting APTicket for installType=Update\n");
+            info("======== requesting APTicket for installType=Update =======\n");
             devVals->installType = kInstallTypeUpdate;
             if (tssrequest(&tssreq2, buildManifestBuffer, devVals, basebandMode)){
                 warning("[TSSR] faild to build tssrequest for alternative installType\n");
@@ -834,6 +835,7 @@ int isManifestBufSignedForDevice(char *buildManifestBuffer, t_devicevals *devVal
             devVals->parsedApnonceLen = 0;
             devVals->apnonce = (char *)0x1337;
             devVals->installType = kInstallTypeErase;
+			info("======== requesting APTicket for no_nonce =======\n");
             if (!tssrequest(&tssreq2, buildManifestBuffer, devVals, kBasebandModeWithoutBaseband)){
                 apticket3 = tss_request_send(tssreq2, NULL);
                 if (print_tss_response) debug_plist(apticket3);
