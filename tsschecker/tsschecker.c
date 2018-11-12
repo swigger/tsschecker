@@ -23,6 +23,7 @@
 #include "download.h"
 #include <libfragmentzip/libfragmentzip.h>
 #include <libirecovery.h>
+#include <inttypes.h>
 #include "tss.h"
 
 #ifdef __APPLE__
@@ -177,11 +178,11 @@ static struct bbdevice bbdevices[] = {
     {"iPad7,2", 2315222105, 4}, // iPad Pro (12.9", 1st gen, Cellular)
     {"iPad7,3", 0, 0}, // iPad Pro (10,5", Wi-Fi)
     {"iPad7,4", 2315222105, 4}, // iPad Pro (10,5", Cellular)
-    ("iPad7,5", 0, 0), // iPad (6th generation, 2018, Wi-Fi)
+	{"iPad7,5", 0, 0}, // iPad (6th generation, 2018, Wi-Fi)
     {"iPad8,1", 0, 0}, // iPad Pro (11", Wi-Fi)
     {"iPad8,2", 0, 0}, // iPad Pro (11", 1 TB model, Wi-Fi)
     {"iPad8,5", 0, 0}, // iPad Pro (12,9", 3th gen, Wi-Fi)
-    ("iPad8,6", 0, 0), // iPad Pro (12,9", 3th gen, 1 TB model, Wi-Fi)
+	{"iPad8,6", 0, 0}, // iPad Pro (12,9", 3th gen, 1 TB model, Wi-Fi)
     
     // Apple TVs
     {"AppleTV1,1", 0, 0}, // 1st gen
@@ -786,8 +787,9 @@ getID0:
         size_t bbsnumSize = devVals->bbsnumSize ? devVals->bbsnumSize : bbinfo->bbsnumSize;
         if (BbGoldCertId != bbinfo->bbgcid || bbsnumSize != bbinfo->bbsnumSize) {
             info("\n[TSSR] Found undocumented baseband. Please file an issue at " PACKAGE_BUGREPORT
-                 " with the following information:\n\t%s {\"%s\", " PRIi64 ", " PRIu64 "}\n\n",
-                 devVals->deviceBoard, devVals->deviceModel, BbGoldCertId, bbsnumSize);
+                 " with the following information:\n\t%s {\"%s\", %llu, %llu}\n\n",
+                 devVals->deviceBoard, devVals->deviceModel,
+				 (unsigned long long)BbGoldCertId, (unsigned long long)bbsnumSize);
         }
 
         if (BbGoldCertId == -1) {
