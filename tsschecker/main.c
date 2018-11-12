@@ -81,6 +81,7 @@ void cmd_help(){
     printf("      --list-devices\t\tlist all known devices\n");
     printf("      --list-ios\t\tlist all known ios versions\n");
     printf("      --nocache \t\tignore caches and redownload required files\n");
+    printf("      --bbid bbidnum\t\tmanually specify BasebandGoldCertID\n");
     printf("      --print-tss-request\n");
     printf("      --print-tss-response\n");
     printf("      --raw\t\t\tsend raw file to Apple's tss server (useful for debugging)\n");

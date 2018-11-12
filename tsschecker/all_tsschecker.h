@@ -17,8 +17,8 @@ extern int idevicerestore_debug;
 #define debug(a ...) if (idevicerestore_debug) printf(a)
 #define error(a ...) printf("[Error] "),printf(a)
 
-#define VERSION_COMMIT_COUNT "257"
-#define VERSION_COMMIT_SHA "aa97d94dae3f1816cdf9a0b79ed409991f012f64"
+#define VERSION_COMMIT_COUNT "258"
+#define VERSION_COMMIT_SHA "c862d7c457b63a18f05d35d6a8aa1379c4219936"
 
 
 //statis assert
