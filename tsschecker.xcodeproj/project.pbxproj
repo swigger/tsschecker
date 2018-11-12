@@ -11,8 +11,6 @@
 		87CD9A3D1E0F35FE00E566B7 /* libfragmentzip.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 87CD9A3C1E0F35FE00E566B7 /* libfragmentzip.0.dylib */; };
 		87CEC4C91C576BD9006E75FC /* tss.c in Sources */ = {isa = PBXBuildFile; fileRef = 87CEC4C81C576BD9006E75FC /* tss.c */; };
 		87EB90A31C2940CD002CEE70 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 87EB90A21C2940CD002CEE70 /* main.c */; };
-		87EB90AC1C2940FB002CEE70 /* libplist.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 87EB90AB1C2940FB002CEE70 /* libplist.3.dylib */; };
-		87EB90AE1C294108002CEE70 /* libcurl.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 87EB90AD1C294108002CEE70 /* libcurl.tbd */; };
 		87F1F6791E168ABE00301726 /* libirecovery.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 87F1F6781E168ABE00301726 /* libirecovery.2.dylib */; };
 		87F927AC1C3E44CE00343510 /* tsschecker.c in Sources */ = {isa = PBXBuildFile; fileRef = 87F927AA1C3E44CE00343510 /* tsschecker.c */; };
 		87F927AF1C3E455200343510 /* download.c in Sources */ = {isa = PBXBuildFile; fileRef = 87F927AD1C3E455200343510 /* download.c */; };
@@ -31,7 +29,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8747AC521D83006100349BB9 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
 		87AD68BB1D8ACE7F0094A99F /* all_tsschecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = all_tsschecker.h; sourceTree = "<group>"; };
 		87B93E841EE709A800709583 /* jssy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jssy.c; path = external/jssy/jssy/jssy.c; sourceTree = SOURCE_ROOT; };
 		87B93E851EE709A800709583 /* jssy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jssy.h; path = external/jssy/jssy/jssy.h; sourceTree = SOURCE_ROOT; };
@@ -40,8 +37,6 @@
 		87CEC4CA1C576BE0006E75FC /* tss.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tss.h; sourceTree = "<group>"; };
 		87EB909F1C2940CD002CEE70 /* tsschecker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tsschecker; sourceTree = BUILT_PRODUCTS_DIR; };
 		87EB90A21C2940CD002CEE70 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		87EB90AB1C2940FB002CEE70 /* libplist.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libplist.3.dylib; path = ../../../../../usr/local/lib/libplist.3.dylib; sourceTree = "<group>"; };
-		87EB90AD1C294108002CEE70 /* libcurl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcurl.tbd; path = usr/lib/libcurl.tbd; sourceTree = SDKROOT; };
 		87F1F6781E168ABE00301726 /* libirecovery.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libirecovery.2.dylib; path = ../../../../usr/local/lib/libirecovery.2.dylib; sourceTree = "<group>"; };
 		87F927AA1C3E44CE00343510 /* tsschecker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tsschecker.c; sourceTree = "<group>"; };
 		87F927AB1C3E44CE00343510 /* tsschecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tsschecker.h; sourceTree = "<group>"; };
@@ -56,8 +51,6 @@
 			files = (
 				87F1F6791E168ABE00301726 /* libirecovery.2.dylib in Frameworks */,
 				87CD9A3D1E0F35FE00E566B7 /* libfragmentzip.0.dylib in Frameworks */,
-				87EB90AE1C294108002CEE70 /* libcurl.tbd in Frameworks */,
-				87EB90AC1C2940FB002CEE70 /* libplist.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,9 +95,6 @@
 		87EB90961C2940CD002CEE70 = {
 			isa = PBXGroup;
 			children = (
-				8747AC521D83006100349BB9 /* libcrypto.dylib */,
-				87EB90AD1C294108002CEE70 /* libcurl.tbd */,
-				87EB90AB1C2940FB002CEE70 /* libplist.3.dylib */,
 				87EB90A11C2940CD002CEE70 /* tsschecker */,
 				87EB90A01C2940CD002CEE70 /* Products */,
 				87CD9A3B1E0F35FE00E566B7 /* Frameworks */,
@@ -291,7 +281,11 @@
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_CFLAGS = "-std=c11";
-				OTHER_LDFLAGS = "-L/opt/local/lib";
+				OTHER_LDFLAGS = (
+					"-L/opt/local/lib",
+					"-lcurl",
+					"-lplist.3",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -307,7 +301,11 @@
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_CFLAGS = "-std=c11";
-				OTHER_LDFLAGS = "-L/opt/local/lib";
+				OTHER_LDFLAGS = (
+					"-L/opt/local/lib",
+					"-lcurl",
+					"-lplist.3",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
