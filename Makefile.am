@@ -1,1 +1,1 @@
-SUBDIRS=tsschecker
+SUBDIRS = tsschecker

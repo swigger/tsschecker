@@ -1,5 +1,5 @@
 //
-//  ipswme.h
+//  tsschecker.h
 //  tsschecker
 //
 //  Created by tihmstar on 07.01.16.
@@ -28,6 +28,7 @@ extern const char *shshSavePath;
 struct bbdevice{
     const char *deviceModel;
     uint64_t bbgcid;
+    size_t bbsnumSize;
 };
 
 typedef struct bbdevice* t_bbdevice;
@@ -47,6 +48,8 @@ typedef struct{
     uint64_t bbgcid;
     size_t parsedApnonceLen;
     size_t parsedSepnonceLen;
+    uint8_t *bbsnum;
+    size_t bbsnumSize;
     char generator[19];
     union{
         t_installType installType : 2;
@@ -81,7 +84,6 @@ typedef struct{
 
 int parseHex(const char *nonce, size_t *parsedLen, char *ret, size_t *retSize);
 
-inline t_bbdevice bbdevices_get_all();   
 char *getFirmwareJson();
 char *getOtaJson();
 long parseTokens(const char *json, jssytok_t **tokens);
@@ -91,7 +93,7 @@ int printListOfiOSForDevice(jssytok_t *tokens, char *device, int isOTA);
     
 char *getFirmwareUrl(const char *deviceModel, t_iosVersion *versVals, jssytok_t *tokens);
 char *getBuildManifest(char *url, const char *device, const char *version, const char *buildID, int isOta);
-int64_t getBBGCIDForDevice(const char *deviceModel);
+t_bbdevice getBBDeviceInfo(const char *deviceModel);
 
 int tssrequest(plist_t *tssrequest, char *buildManifest, t_devicevals *devVals, t_basebandMode basebandMode);
 int isManifestSignedForDevice(const char *buildManifestPath, t_devicevals *devVals, t_iosVersion *versVals);

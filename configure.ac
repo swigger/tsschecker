@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([tsschecker], [1.0.4], [tihmstar@gmail.com])
+AC_INIT([tsschecker], [1.0], [https://github.com/encounter/tsschecker/issues],, [https://github.com/encounter/tsschecker])
 # prepare for automake
 AM_INIT_AUTOMAKE([foreign])
 
@@ -67,8 +67,21 @@ case $CFLAGS in
   *)
   ;;
 esac
-
 AM_CONDITIONAL(NOMAIN, test x$nomain == xtrue)
+
+AC_MSG_CHECKING([whether to enable WIN32 specific flags])
+case "$host_os" in
+*mingw*)
+        win32=true
+        AC_MSG_RESULT([yes])
+	AC_CHECK_TOOL(WINDRES, windres)
+  ;;
+*)
+        win32=false
+        AC_MSG_RESULT([no])
+  ;;
+esac
+AM_CONDITIONAL(WIN32, test x$win32 = xtrue)
 
 AC_CONFIG_FILES([Makefile tsschecker/Makefile])
 AC_OUTPUT

@@ -1,12 +1,19 @@
 //
-//  ipswme.c
+//  tsschecker.c
 //  tsschecker
 //
 //  Created by tihmstar on 07.01.16.
 //  Copyright © 2016 tihmstar. All rights reserved.
 //
 
+#define _POSIX_C_SOURCE 200809L
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <math.h>
@@ -29,7 +36,6 @@
 #define FIRMWARE_JSON_URL "https://api.ipsw.me/v2.1/firmwares.json/condensed"
 #define FIRMWARE_OTA_JSON_URL "https://api.ipsw.me/v2.1/ota.json/condensed"
 
-#warning TODO verify these values are actually correct for all devices (iPhone7)
 #define NONCELEN_BASEBAND 20 
 #define NONCELEN_SEP      20
 
@@ -105,67 +111,89 @@ const char *shshSavePath = "."DIRECTORY_DELIMITER_STR;
 
 
 static struct bbdevice bbdevices[] = {
-    {"iPod1,1", 0},
-    {"iPod2,1", 0},
-    {"iPod3,1", 0},
-    {"iPod4,1", 0},
-    {"iPod5,1", 0},
-    {"iPod7,1", 0},
+    // iPod touches
+    {"iPod1,1", 0, 0}, // 1st gen
+    {"iPod2,1", 0, 0}, // 2nd gen
+    {"iPod3,1", 0, 0}, // 3rd gen
+    {"iPod4,1", 0, 0}, // 4th gen
+    {"iPod5,1", 0, 0}, // 5th gen
+    {"iPod7,1", 0, 0}, // 6th gen
     
-    {"iPhone2,1", 0},
-    {"iPhone3,1", 257},
-    {"iPhone3,3", 2},
-    {"iPhone4,1", 2},
-    {"iPhone5,1", 3255536192},
-    {"iPhone5,2", 3255536192},
-    {"iPhone5,3", 3554301762},
-    {"iPhone5,4", 3554301762},
-    {"iPhone6,1", 3554301762},
-    {"iPhone6,2", 3554301762},
-    {"iPhone7,1", 3840149528},
-    {"iPhone7,2", 3840149528},
-    {"iPhone8,1", 3840149528},
-    {"iPhone8,2", 3840149528},
-    {"iPhone8,4", 3840149528},
+    // iPhones
+    {"iPhone2,1", 0, 0}, // iPhone 3Gs
+    {"iPhone3,1", 257, 12}, // iPhone 4 GSN
+    {"iPhone3,3", 2, 4}, // iPhone 4 CDMA
+    {"iPhone4,1", 2, 4}, // iPhone 4s
+    {"iPhone5,1", 3255536192, 4}, // iPhone 5 (GSM)
+    {"iPhone5,2", 3255536192, 4}, // iPhone 5 (Global)
+    {"iPhone5,3", 3554301762, 4}, // iPhone 5c
+    {"iPhone5,4", 3554301762, 4}, // iPhone 5c (Global)
+    {"iPhone6,1", 3554301762, 4}, // iPhone 5s
+    {"iPhone6,2", 3554301762, 4}, // iPhone 5s (Global)
+    {"iPhone7,1", 3840149528, 4}, // iPhone 6 Plus
+    {"iPhone7,2", 3840149528, 4}, // iPhone 6
+    {"iPhone8,1", 3840149528, 4}, // iPhone 6s
+    {"iPhone8,2", 3840149528, 4}, // iPhone 6s Plus
+    {"iPhone8,4", 3840149528, 4}, // iPhone SE
+    {"iPhone9,1", 2315222105, 4}, // iPhone 7 (Global)
+    {"iPhone9,2", 2315222105, 4}, // iPhone 7 Plus (Global)
+    {"iPhone9,3", 1421084145, 12}, // iPhone 7 GSM
+    {"iPhone9,4", 1421084145, 12}, // iPhone 7 Plus (GSM)
+    {"iPhone10,1", 2315222105, 4}, // iPhone 8 (Global)
+    {"iPhone10,2", 2315222105, 4}, // iPhone 8 Plus (Global)
+    {"iPhone10,3", 2315222105, 4}, // iPhone X (Global)
+    {"iPhone10,4", 524245983, 12}, // iPhone 8 (GSM)
+    {"iPhone10,5", 524245983, 12}, // iPhone 8 Plus (GSM)
+    {"iPhone10,6", 524245983, 12}, // iPhone X GSM
     
-//    {"iPhone9,3", 1421084145},
-//    {"iPhone9,4", 1421084145},
+    // iPads
+    {"iPad1,1", 0, 0}, // iPad (1st gen)
+    {"iPad2,1", 0, 0}, // iPad 2 Wi-Fi
+    {"iPad2,2", 257, 12}, // iPad 2 GSM
+    {"iPad2,4", 0, 0}, // iPad 2 Wi-Fi (2012)
+    {"iPad2,5", 0, 0}, // iPad mini (1st gen, Wi-Fi)
+    {"iPad3,1", 0, 0}, // the new iPad (3rd gen, Wi-Fi)
+    {"iPad3,2", 4, 4}, // the new iPad (3rd gen, CDMA)
+    {"iPad3,3", 4, 4}, // the new iPad (3rd gen, GSM)
+    {"iPad3,4", 0, 0}, // iPad with Retina Display (4th gen, Wi-Fi)
+    {"iPad3,6", 3255536192, 4}, // iPad with Retina Display (4th gen, Global)
+    {"iPad4,1", 0, 0}, // iPad Air (Wi-Fi)
+    {"iPad4,2", 3554301762, 4}, // iPad Air (Cellular)
+    {"iPad4,4", 0, 0}, // iPad mini 2 (Wi-Fi)
+    {"iPad4,5", 3554301762, 4}, // iPad mini 2 (Cellular)
+    {"iPad4,7", 0, 0}, // iPad mini 3 (Wi-Fi)
+    {"iPad4,8", 3554301762, 4}, // iPad mini 3 (Cellular)
+    {"iPad5,1", 0, 0}, // iPad mini 4 (Wi-Fi)
+    {"iPad5,2", 3840149528, 4}, // iPad mini 4 (Cellular)
+    {"iPad5,3", 0, 0}, // iPad Air 2 (Wi-Fi)
+    {"iPad5,4", 3840149528, 4}, // iPad Air 2 (Cellular)
+    {"iPad6,3", 0, 0}, // iPad Pro (9,7", Wi-Fi)
+    {"iPad6,4", 3840149528, 4}, // iPad Pro (9,7", Cellular)
+    {"iPad6,7", 0, 0}, // iPad Pro (12.9", 1st gen, Wi-Fi)
+    {"iPad6,8", 3840149528, 4}, // iPad Pro (12.9", 1st gen, Cellular)
+    {"iPad6,11", 0, 0}, // iPad (5th gen, 2017, Wi-Fi)
+    {"iPad6,12", 3840149528, 4}, // iPad (5th gen, 2017, Cellular)
+    {"iPad7,1", 0, 0}, // iPad Pro (12.9", 2nd gen, Wi-Fi)
+    {"iPad7,2", 2315222105, 4}, // iPad Pro (12.9", 1st gen, Cellular)
+    {"iPad7,3", 0, 0}, // iPad Pro (10,5", Wi-Fi)
+    {"iPad7,4", 2315222105, 4}, // iPad Pro (10,5", Cellular)
+    ("iPad7,5", 0, 0), // iPad (6th generation, 2018, Wi-Fi)
+    {"iPad8,1", 0, 0}, // iPad Pro (11", Wi-Fi)
+    {"iPad8,2", 0, 0}, // iPad Pro (11", 1 TB model, Wi-Fi)
+    {"iPad8,5", 0, 0}, // iPad Pro (12,9", 3th gen, Wi-Fi)
+    ("iPad8,6", 0, 0), // iPad Pro (12,9", 3th gen, 1 TB model, Wi-Fi)
     
-    {"iPad1,1", 0},
-    {"iPad2,1", 0},
-    {"iPad2,2", 257},
-    {"iPad2,4", 0},
-    {"iPad2,5", 0},
-    {"iPad3,1", 0},
-    {"iPad3,2", 4},
-    {"iPad3,3", 4},
-    {"iPad3,4", 0},
-    {"iPad3,6", 3255536192},
-    {"iPad4,1", 0},
-    {"iPad4,2", 3554301762},
-    {"iPad4,4", 0},
-    {"iPad4,5", 3554301762},
-    {"iPad4,7", 0},
-    {"iPad4,8", 3554301762},
-    {"iPad5,1", 0},
-    {"iPad5,2", 3840149528},
-    {"iPad5,3", 0},
-    {"iPad5,4", 3840149528},
-    {"iPad6,3", 0},
-    {"iPad6,4", 3840149528},
-    {"iPad6,7", 0},
-    {"iPad6,8", 3840149528},
-    {"iPad6,11", 0},
-    
-    {"AppleTV1,1", 0},
-    {"AppleTV2,1", 0},
-    {"AppleTV3,1", 0},
-    {"AppleTV3,2", 0},
-    {"AppleTV5,3", 0},
-    {NULL,0}
+    // Apple TVs
+    {"AppleTV1,1", 0, 0}, // 1st gen
+    {"AppleTV2,1", 0, 0}, // 2nd gen
+    {"AppleTV3,1", 0, 0}, // 3rd gen
+    {"AppleTV3,2", 0, 0}, // 3rd gen (2013)
+    {"AppleTV5,3", 0, 0}, // 4th gen
+    {"AppleTV6,2", 0, 0}, // Apple TV 4K
+    {NULL, 0, 0}
 };
 
-t_bbdevice bbdevices_get_all() {
+inline static t_bbdevice bbdevices_get_all() {
     return bbdevices;
 }
 
@@ -485,23 +513,13 @@ char *getBuildManifest(char *url, const char *device, const char *version, const
     return buildmanifest;
 }
 
-    extern int64_t bbid;
-int64_t getBBGCIDForDevice(const char *deviceModel){
-	if (bbid) return bbid;
-
+t_bbdevice getBBDeviceInfo(const char *deviceModel){
     t_bbdevice bbdevs = bbdevices_get_all();
     
     while (bbdevs->deviceModel && strcasecmp(bbdevs->deviceModel, deviceModel) != 0)
         bbdevs++;
     
-    if (!bbdevs->deviceModel) {
-        error("[TSSC] ERROR: device \"%s\" is not in bbgcid list, which means it's BasebandGoldCertID isn't documented yet.\nIf you own such a device please consider contacting @tihmstar to get instructions how to contribute to this project.\n",deviceModel);
-        return -1;
-    }else if (!bbdevs->bbgcid) {
-        warning("[TSSC] A BasebandGoldCertID is not required for %s\n",deviceModel);
-    }
-    
-    return bbdevs->bbgcid;
+    return bbdevs;
 }
 
 void debug_plist(plist_t plist);
@@ -540,45 +558,41 @@ int tss_populate_devicevals(plist_t tssreq, uint64_t ecid, char *nonce, size_t n
     return 0;
 }
 
-int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbGoldCertId, size_t bbsnumSize){
+int tss_populate_basebandvals(plist_t tssreq, plist_t tssparameters, int64_t BbGoldCertId, uint8_t *BbSNUM, size_t bbsnumSize){
+#define reterror(a...) {error(a); ret = -1; goto error;}
     int ret = 0;
-    plist_t parameters = plist_new_dict();
+    plist_t parameters = plist_copy(tssparameters);
     char bbnonce[NONCELEN_BASEBAND+1];
-    char *bbsnum = (char*)malloc(bbsnumSize);
+
+    int did_malloc_bbsnum = 0;
+    if (!BbSNUM) {
+        BbSNUM = (uint8_t *)malloc(bbsnumSize);
+        getRandNum((char *)BbSNUM, bbsnumSize, 256);
+        did_malloc_bbsnum = 1;
+    }
     int64_t BbChipID = 0;
     
     
-    getRandNum(bbsnum, bbsnumSize, 256);
     getRandNum(bbnonce, NONCELEN_BASEBAND, 256);
     srand((unsigned int)time(NULL));
     int n=0; for (int i=1; i<7; i++) BbChipID += (rand() % 10) * pow(10, ++n);
     
-    
+
     /* BasebandNonce not required */
-//    plist_dict_set_item(parameters, "BbNonce", plist_new_data(bbnonce, noncelen));
-    plist_dict_set_item(parameters, "BbChipID", plist_new_uint(BbChipID));
+//    plist_dict_set_item(parameters, "BbNonce", plist_new_data(bbnonce, NONCELEN_BASEBAND));
     plist_dict_set_item(parameters, "BbGoldCertId", plist_new_uint(BbGoldCertId));
-    plist_dict_set_item(parameters, "BbSNUM", plist_new_data(bbsnum, bbsnumSize));
-    
-    /* BasebandFirmware */
-    plist_t BasebandFirmware = plist_access_path(tssparameters, 2, "Manifest", "BasebandFirmware");
-    if (!BasebandFirmware || plist_get_node_type(BasebandFirmware) != PLIST_DICT) {
-        error("ERROR: Unable to get BasebandFirmware node\n");
-        ret = -1;
-        goto error;
+    plist_dict_set_item(parameters, "BbSNUM", plist_new_data((char *)BbSNUM, bbsnumSize));
+
+    if (tss_request_add_baseband_tags(tssreq, parameters, NULL) < 0) {
+        reterror("[TSSR] Error: Failed to add baseband tags to TSS request\n");
     }
-    plist_t bbfwdict = plist_copy(BasebandFirmware);
-    BasebandFirmware = NULL;
-    if (plist_dict_get_item(bbfwdict, "Info")) {
-        plist_dict_remove_item(bbfwdict, "Info");
-    }
-    plist_dict_set_item(tssreq, "BasebandFirmware", bbfwdict);
-    
-    tss_request_add_baseband_tags(tssreq, parameters, NULL);
     
 error:
-    free(bbsnum);
+    if (did_malloc_bbsnum) {
+        free(BbSNUM);
+    }
     return ret;
+#undef reterror
 }
 
 int parseHex(const char *nonce, size_t *parsedLen, char *ret, size_t *retSize){
@@ -618,10 +632,12 @@ int tss_populate_random(plist_t tssreq, int is64bit, t_devicevals *devVals){
     if (!devVals->deviceModel)
         return error("[TSSR] internal error: devVals->deviceModel is missing\n"),-1;
 
+    // TODO how can we determine this better?
     if (strncasecmp(devVals->deviceModel, "iPhone9,", strlen("iPhone9,")) == 0 ||
             strncasecmp(devVals->deviceModel, "iPhone10,", strlen("iPhone10,")) == 0 ||
             strncasecmp(devVals->deviceModel, "iPhone11,", strlen("iPhone11,")) == 0 ||
             strncasecmp(devVals->deviceModel, "iPad7,", strlen("iPad7,")) == 0 ||
+            strncasecmp(devVals->deviceModel, "iPad8,", strlen("iPad8,")) == 0 ||
             strncasecmp(devVals->deviceModel, "AppleTV6,", strlen("AppleTV6,")) == 0)
         nonceLen = 32;
 
@@ -761,26 +777,29 @@ getID0:
         //TODO don't use .shsh2 ending and don't save generator when saving only baseband
         info("[TSSR] User specified to request only a Baseband ticket.\n");
     }
-    
+
     if (basebandMode != kBasebandModeWithoutBaseband) {
         //TODO: verify that this being int64_t instead of uint64_t doesn't actually break something
-        
-        int64_t BbGoldCertId = (devVals->bbgcid) ? devVals->bbgcid : getBBGCIDForDevice(devVals->deviceModel);
+
+        t_bbdevice bbinfo = getBBDeviceInfo(devVals->deviceModel);
+        int64_t BbGoldCertId = devVals->bbgcid ? devVals->bbgcid : bbinfo->bbgcid;
+        size_t bbsnumSize = devVals->bbsnumSize ? devVals->bbsnumSize : bbinfo->bbsnumSize;
+        if (BbGoldCertId != bbinfo->bbgcid || bbsnumSize != bbinfo->bbsnumSize) {
+            info("\n[TSSR] Found undocumented baseband. Please file an issue at " PACKAGE_BUGREPORT
+                 " with the following information:\n\t%s {\"%s\", " PRIi64 ", " PRIu64 "}\n\n",
+                 devVals->deviceBoard, devVals->deviceModel, BbGoldCertId, bbsnumSize);
+        }
+
         if (BbGoldCertId == -1) {
             if (basebandMode == kBasebandModeOnlyBaseband){
                 reterror("[TSSR] failed to get BasebandGoldCertID, but requested to get only baseband ticket. Aborting here!\n");
             }
             warning("[TSSR] there was an error getting BasebandGoldCertID, continuing without requesting Baseband ticket\n");
         }else if (BbGoldCertId) {
-            
-            size_t bbsnumSize = 4;
-            if (strcasecmp(devVals->deviceModel, "iPhone9,") == 0)
-                bbsnumSize = 12;
-            else if (strcasecmp(devVals->deviceModel, "iPhone3,") == 0)
-                bbsnumSize = 12;
-            
-            tss_populate_basebandvals(tssreq,tssparameter,BbGoldCertId,bbsnumSize);
-            tss_request_add_baseband_tags(tssreq, tssparameter, NULL);
+    
+            if (tss_populate_basebandvals(tssreq, tssparameter, BbGoldCertId, devVals->bbsnum, bbsnumSize) < 0) {
+                reterror("[TSSR] Error: Failed to populate baseband values\n");
+            }
         }else{
             log("[TSSR] LOG: device %s doesn't need a Baseband ticket, continuing without requesting a Baseband ticket\n",devVals->deviceModel);
         }
@@ -995,7 +1014,6 @@ int isVersionSignedForDevice(jssytok_t *firmwareTokens, t_iosVersion *versVals, 
     if (!urls) reterror("[TSSC] ERROR: could not get url for device %s on iOS %s\n",devVals->deviceModel,(!versVals->version ? versVals->buildID : versVals->version));
 
     int cursigned = 0;
-    nocache = 1;
     for (t_versionURL *u = urls; u->url; u++) {
         buildManifest = getBuildManifest(u->url, devVals->deviceModel, versVals->version, u->buildID, versVals->isOta);
         if (!buildManifest) {
@@ -1004,7 +1022,8 @@ int isVersionSignedForDevice(jssytok_t *firmwareTokens, t_iosVersion *versVals, 
         }
 
         if (cursigned && !u->isDupulicate) cursigned = 0;
-        
+
+        nocache = 1;
         if (cursigned) {
             info("[TSSC] skipping duplicated build\n");
             
@@ -1053,7 +1072,7 @@ char *getFirmwareUrl(const char *deviceModel, t_iosVersion *versVals, jssytok_t 
     return ret;
 }
 
-#warning print devices function doesn't actually check if devices are sorted. it assues they are sorted in json
+#warning "print devices function doesn't actually check if devices are sorted. it assues they are sorted in json"
 int printListOfDevices(jssytok_t *tokens){
 #define MAX_PER_LINE 10
     log("[JSON] printing device list\n");
